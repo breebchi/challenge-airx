@@ -30,7 +30,7 @@ public class DefaultFlightService implements FlightService
     @Override
     public FlightDO find(Long flightId) throws EntityNotFoundException
     {
-        return flightRepository.findById(flightId).orElseThrow(() -> new EntityNotFoundException("Could not find entity with id: " + flightId));
+        return findFlightChecked(flightId);
     }
 
 
@@ -42,7 +42,9 @@ public class DefaultFlightService implements FlightService
     }
 
 
-    @Override public FlightDO create(FlightDO flightDO) throws ConstraintsViolationException
+    @Transactional
+    @Override
+    public FlightDO create(FlightDO flightDO) throws ConstraintsViolationException
     {
         FlightDO flight;
         try
@@ -57,12 +59,13 @@ public class DefaultFlightService implements FlightService
     }
 
 
-    @Override public void delete(Long flightId) throws EntityNotFoundException
+    @Transactional
+    @Override
+    public void delete(Long flightId) throws EntityNotFoundException
     {
         FlightDO flightDO = findFlightChecked(flightId);
         flightRepository.delete(flightDO);
     }
-
 
 
     private FlightDO findFlightChecked(Long flightId) throws EntityNotFoundException
