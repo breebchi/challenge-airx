@@ -17,5 +17,5 @@ public interface FlightService
 
     FlightDO create(FlightDO flightDO) throws ConstraintsViolationException;
 
-    void delete(Long carId) throws EntityNotFoundException;
+    void delete(Long flightId) throws EntityNotFoundException;
 }
