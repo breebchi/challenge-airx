@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "flight",
+    name = "flights",
     uniqueConstraints =
     @UniqueConstraint(columnNames = {"iataCarrierCode", "flightNumber"})
 )

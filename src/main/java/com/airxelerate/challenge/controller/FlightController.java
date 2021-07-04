@@ -8,6 +8,7 @@ import com.airxelerate.challenge.exception.EntityNotFoundException;
 import com.airxelerate.challenge.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,10 @@ import java.util.List;
 /**
  * This rest controllers presents endpoints to be called upon to acquire a resource.
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @Validated
-@RequestMapping("v1/flights")
+@RequestMapping("api/flights")
 public class FlightController
 {
     private final FlightService flightService;
@@ -34,6 +36,7 @@ public class FlightController
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public FlightDTO findFlight(@PathVariable @NotNull Long id) throws EntityNotFoundException
     {
         return FlightMapper.makeFlightDTO(flightService.find(id));
@@ -41,6 +44,7 @@ public class FlightController
 
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_ADMIN')")
     public List<FlightDTO> findAll()
     {
         return FlightMapper.makeFlightDTOList(flightService.find());
@@ -48,6 +52,7 @@ public class FlightController
 
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public FlightDTO createFlight(@Valid @RequestBody FlightDTO flightDTO) throws ConstraintsViolationException
     {
@@ -57,6 +62,7 @@ public class FlightController
 
 
     @DeleteMapping("/{flightId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteFlight(@PathVariable long flightId) throws EntityNotFoundException
     {
         flightService.delete(flightId);
